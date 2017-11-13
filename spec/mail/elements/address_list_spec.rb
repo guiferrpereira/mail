@@ -82,6 +82,20 @@ describe Mail::AddressList do
       a = Mail::AddressList.new(parse_text)
       expect(a.addresses.first.comments).to eq result
     end
+
+    it "should handle zero width space" do
+      parse_text = "foo@example.com, \u200b bar@example.com"
+      result = ['foo@example.com', 'bar@example.com']
+      a = Mail::AddressList.new(parse_text)
+      expect(a.addresses.map {|addr| addr.to_s }).to eq result
+    end
+
+    it "should handle zero width space near valid address" do
+      parse_text = "foo@example.com, \u200bbar@example.com"
+      result = ['foo@example.com', 'bar@example.com']
+      a = Mail::AddressList.new(parse_text)
+      expect(a.addresses.map {|addr| addr.to_s }).to eq result
+    end
   end
 
   describe "functionality" do
